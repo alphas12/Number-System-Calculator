@@ -1,5 +1,5 @@
 # Source files
-SOURCE = converter.s
+SOURCE = src/converter.s
 
 # Tools
 AS = as
