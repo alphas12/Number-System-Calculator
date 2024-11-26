@@ -36,28 +36,11 @@ xcode-select --install
 
 2. Clone or download this repository
 
-## Building and Running
 
-### Using Make (Recommended)
-
-1. To build and run in one command:
-```bash
-make run
-```
-
-2. To only build:
-```bash
-make
-```
-
-3. To clean compiled files:
-```bash
-make clean
-```
 
 ### Manual Compilation
 
-If you prefer not to use Make, you can compile manually:
+You can do Manual Compilation
 
 1. Assemble the source:
 ```bash
