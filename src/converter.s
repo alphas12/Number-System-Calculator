@@ -42,4 +42,12 @@ invalid_selection_msg:
 invalid_operation_msg:
     .asciz "\nInvalid operation! Please choose 1-4: "
 
+// Text section
+.section __TEXT,__text
+_start:
 
+
+exit_program:
+    mov x0, #0              // Exit code 0
+    mov x16, #1             // Exit syscall
+    svc #0x80              // Make the system call
