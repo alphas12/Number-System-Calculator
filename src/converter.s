@@ -45,6 +45,32 @@ invalid_operation_msg:
 // Text section
 .section __TEXT,__text
 _start:
+select_system:
+    // Display welcome message and get number system
+    adrp x0, welcome_msg@PAGE
+    add x0, x0, welcome_msg@PAGEOFF
+    bl print_string
+
+    // Read base choice
+    bl read_input
+    sub x19, x0, #48        // Store base in x19 (1-5)
+
+    // Validate base choice
+    cmp x19, #1
+    b.lt invalid_system
+    cmp x19, #5
+    b.gt invalid_system
+    
+    // Check for exit option
+    cmp x19, #5
+    b.eq exit_program
+    b get_first_number
+
+invalid_system:
+    adrp x0, invalid_selection_msg@PAGE
+    add x0, x0, invalid_selection_msg@PAGEOFF
+    bl print_string
+    b select_system
 
 
 exit_program:
