@@ -98,6 +98,12 @@ get_first_number:
     bl str_to_int
     mov x22, x0             // Store first number in x22
 
+invalid_first:
+    adrp x0, invalid_input@PAGE
+    add x0, x0, invalid_input@PAGEOFF
+    bl print_string
+    b get_first_number      // Retry input for the first number
+
 select_operation:
     // Display operation message
     adrp x0, operation_msg@PAGE
@@ -146,6 +152,12 @@ get_second_number:
     mov x2, x19             // Base choice
     bl str_to_int
     mov x24, x0             // Store second number in x24
+
+invalid_second:
+    adrp x0, invalid_input@PAGE
+    add x0, x0, invalid_input@PAGEOFF
+    bl print_string
+    b get_second_number     // Retry input for the second number
 
     // Perform operation based on choice in x23
     cmp x23, #1
