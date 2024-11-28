@@ -159,6 +159,19 @@ invalid_second:
     bl print_string
     b get_second_number     // Retry input for the second number
 
+    do_addition:
+    add x25, x22, x24
+    b show_result
+
+    do_subtraction:
+    sub x25, x22, x24
+    b show_result
+
+    do_multiplication:
+    mul x25, x22, x24
+    b show_result
+
+
     // Perform operation based on choice in x23
     cmp x23, #1
     b.eq do_addition
