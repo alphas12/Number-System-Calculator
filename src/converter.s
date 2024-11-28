@@ -179,6 +179,24 @@ do_subtraction:
 
 
 show_result:
+    // Show in decimal
+    adrp x0, dec_msg@PAGE
+    add x0, x0, dec_msg@PAGEOFF
+    bl print_string
+    mov x0, x25
+    mov x1, #10
+    bl int_to_str
+    bl print_string_with_len
+
+    // Show in binary
+    adrp x0, bin_msg@PAGE
+    add x0, x0, bin_msg@PAGEOFF
+    bl print_string
+    mov x0, x25
+    mov x1, #2
+    bl int_to_str
+    bl print_string_with_len
+
     // Display result message
     adrp x0, result_msg@PAGE
     add x0, x0, result_msg@PAGEOFF
