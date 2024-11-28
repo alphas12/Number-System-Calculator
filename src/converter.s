@@ -153,6 +153,15 @@ get_second_number:
     bl str_to_int
     mov x24, x0             // Store second number in x24
 
+    // Perform operation based on choice in x23
+    cmp x23, #1
+    b.eq do_addition
+    cmp x23, #2
+    b.eq do_subtraction
+    cmp x23, #3
+    b.eq do_multiplication
+    b do_division
+
 invalid_second:
     adrp x0, invalid_input@PAGE
     add x0, x0, invalid_input@PAGEOFF
