@@ -1,125 +1,92 @@
-# Number System Calculator in ARM64 Assembly
+# Number System Calculator
 
-A versatile calculator program written in ARM64 Assembly language for Apple Silicon processors (M1/M2). This calculator supports multiple number systems and basic arithmetic operations.
+![Build](https://github.com/alphas12/Number-System-Calculator/workflows/Build/badge.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A versatile number system calculator written in ARM64 Assembly for macOS, supporting conversions and calculations between different number systems.
 
 ## Features
 
-- Supports multiple number systems:
+- Support for multiple number systems:
   - Decimal (Base 10)
   - Binary (Base 2)
   - Hexadecimal (Base 16)
   - Octal (Base 8)
-
 - Basic arithmetic operations:
-  - Addition (+)
-  - Subtraction (-)
-  - Multiplication (*)
-  - Division (/)
+  - Addition
+  - Subtraction
+  - Multiplication
+  - Division
+- Input validation
+- Real-time conversion between number systems
 
-- Input validation for all number systems
-- Results displayed in all supported number systems
-- Case-insensitive hexadecimal input (both 'a'-'f' and 'A'-'F' accepted)
-- Division by zero error handling
-- Clean exit option
+## Prerequisites
 
-## Requirements
-
-- macOS with Apple Silicon processor (M1/M2)
+- macOS with Apple Silicon (M1/M2)
 - Xcode Command Line Tools
 
-## Installation
-
-1. Install Xcode Command Line Tools if not already installed:
+To install Xcode Command Line Tools:
 ```bash
 xcode-select --install
 ```
 
-2. Clone or download this repository
+## Building
 
+The project uses a Makefile for building. Here are the available commands:
 
-
-### Manual Compilation
-
-You can do Manual Compilation
-
-1. Assemble the source:
 ```bash
-as -o converter.o converter.s
+# Build the calculator
+make
+
+# Build and run the calculator
+make run
+
+# Clean build files
+make clean
 ```
 
-2. Link the object file:
-```bash
-ld -o converter converter.o -lSystem -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -e _start -arch arm64
+## Project Structure
+
+```
+.
+├── src/
+│   └── converter.s    # Main assembly source code
+├── Makefile          # Build configuration
+├── LICENSE           # MIT License
+└── README.md         # This file
 ```
 
-3. Run the program:
+## Usage
+
+1. Build and run the calculator:
 ```bash
-./converter
+make run
 ```
 
-## Usage Instructions
-
-1. Select a number system (1-5):
-   - 1: Decimal (0-9)
-   - 2: Binary (0-1)
-   - 3: Hexadecimal (0-9, A-F)
-   - 4: Octal (0-7)
+2. Select a number system (1-5):
+   - 1: Decimal
+   - 2: Binary
+   - 3: Hexadecimal
+   - 4: Octal
    - 5: Exit
 
-2. Enter your first number in the chosen number system
+3. Enter your numbers and select an operation
+4. View the result in all supported number systems
 
-3. Select an operation (1-4):
-   - 1: Addition (+)
-   - 2: Subtraction (-)
-   - 3: Multiplication (*)
-   - 4: Division (/)
+## Contributing
 
-4. Enter your second number in the chosen number system
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-5. View results in all number systems:
-   - Decimal
-   - Binary
-   - Hexadecimal
-   - Octal
+## License
 
-## Example Usage
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```
-Number System Calculator
-1. Decimal
-2. Binary
-3. Hexadecimal
-4. Octal
-5. Exit
+## Acknowledgments
 
-Select number system (1-5): 3
-Enter first number: A
-Select operation (1-4): 1
-Enter second number: F
-
-Results:
-Result in chosen base: 19
-Decimal: 25
-Binary: 11001
-Hexadecimal: 19
-Octal: 31
-```
-
-## Error Handling
-
-- Invalid number system selection: Prompts for valid input (1-5)
-- Invalid operation selection: Prompts for valid input (1-4)
-- Invalid digits for chosen base: Shows error and asks for input again
-- Division by zero: Shows error message and returns to start
-- Invalid hexadecimal digits: Only accepts 0-9 and A-F (case insensitive)
-
-## Technical Details
-
-- Written in ARM64 assembly for Apple Silicon processors
-- Uses macOS system calls
-- Optimized for M1/M2 architecture
-- Modular design with separate functions for:
-  - Input validation
-  - Number system conversion
-  - Arithmetic operations
-  - Result display
+- Built for ARM64 architecture
+- Optimized for macOS on Apple Silicon
+- Uses native system calls for I/O operations
