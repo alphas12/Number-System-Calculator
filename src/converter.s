@@ -10,15 +10,13 @@ input_msg1:
 input_msg2:
     .asciz "\nEnter second number: "
 operation_msg:
-    .asciz "\nSelect operation:\n1. Addition (+)\n2. Subtraction (-)\n3. Multiplication (*)\n4. Division (/)\nChoice: "
+    .asciz "\nSelect operation:\n1. Addition (+)\n2. Subtraction (-)\n3. Multiplication (*)\nChoice: "
 invalid_input:
     .asciz "\nInvalid input for chosen number system! Try again.\n"
 result_msg:
     .asciz "\nResults:\n"
 chosen_base_msg:
     .asciz "Result in chosen base: "
-div_zero_msg:
-    .asciz "\nError: Division by zero!\n"
 dec_msg:
     .asciz "\nDecimal: "
 bin_msg:
@@ -40,7 +38,7 @@ debug_char:
 invalid_selection_msg:
     .asciz "\nInvalid selection! Please choose 1-5: "
 invalid_operation_msg:
-    .asciz "\nInvalid operation! Please choose 1-4: "
+    .asciz "\nInvalid operation! Please choose 1-3: "
 
 // Text section
 .section __TEXT,__text
@@ -160,7 +158,6 @@ get_second_number:
     b.eq do_subtraction
     cmp x23, #3
     b.eq do_multiplication
-    b do_division
 
 invalid_second:
     adrp x0, invalid_input@PAGE
@@ -168,27 +165,38 @@ invalid_second:
     bl print_string
     b get_second_number     // Retry input for the second number
 
-    do_addition:
+do_addition:
     add x25, x22, x24
     b show_result
 
-    do_subtraction:
+do_subtraction:
     sub x25, x22, x24
     b show_result
 
-    do_multiplication:
+ do_multiplication:
     mul x25, x22, x24
     b show_result
 
 
-    // Perform operation based on choice in x23
-    cmp x23, #1
-    b.eq do_addition
-    cmp x23, #2
-    b.eq do_subtraction
-    cmp x23, #3
-    b.eq do_multiplication
-    b do_division
+show_result:
+    // Display result message
+    adrp x0, result_msg@PAGE
+    add x0, x0, result_msg@PAGEOFF
+    bl print_string
+
+    // Show result in chosen base first
+    adrp x0, chosen_base_msg@PAGE
+    add x0, x0, chosen_base_msg@PAGEOFF
+    bl print_string
+    mov x0, x25             // Result to convert
+    mov x2, x19             // Original base choice
+    bl get_base             // Convert choice to actual base
+    mov x1, x0              // Base for conversion
+    mov x0, x25             // Result to convert
+    bl int_to_str
+    bl print_string_with_len
+
+
 
 exit_program:
     mov x0, #0              // Exit code 0
