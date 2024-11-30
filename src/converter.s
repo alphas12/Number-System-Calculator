@@ -223,7 +223,14 @@ show_result:
     bl int_to_str
     bl print_string_with_len
 
-
+  //Show in binary
+    adrp x0, bin_msg@PAGE
+    add x0, x0, bin_msg@PAGEOFF
+    bl print_string
+    mov x0, x25
+    mov x1, #2
+    bl int_to_str
+    bl print_string_with_len
 
 
 exit_program:
