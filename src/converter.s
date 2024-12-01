@@ -239,7 +239,31 @@ show_result:
     bl print_string
     b _start
 
+// Function to get actual base from choice
+get_base:
+    // x2 = base choice (1-4)
+    // returns actual base in x0
+    cmp x2, #1
+    b.eq .Ldec
+    cmp x2, #2
+    b.eq .Lbin
+    cmp x2, #3
+    b.eq .Lhex
+    mov x0, #8      // Default to octal
+    ret
+.Ldec:
+    mov x0, #10
+    ret
+.Lbin:
+    mov x0, #2
+    ret
+.Lhex:
+    mov x0, #16
+    ret
+    
 exit_program:
     mov x0, #0              // Exit code 0
     mov x16, #1             // Exit syscall
     svc #0x80              // Make the system call
+
+    
