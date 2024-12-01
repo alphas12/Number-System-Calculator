@@ -179,7 +179,25 @@ do_subtraction:
 
 
 show_result:
-    // Show in decimal
+
+    // Display result message
+    adrp x0, result_msg@PAGE
+    add x0, x0, result_msg@PAGEOFF
+    bl print_string
+
+    // Show result in chosen base first
+    adrp x0, chosen_base_msg@PAGE
+    add x0, x0, chosen_base_msg@PAGEOFF
+    bl print_string
+    mov x0, x25             // Result to convert
+    mov x2, x19             // Original base choice
+    bl get_base             // Convert choice to actual base
+    mov x1, x0              // Base for conversion
+    mov x0, x25             // Result to convert
+    bl int_to_str
+    bl print_string_with_len
+
+     // Show in decimal
     adrp x0, dec_msg@PAGE
     add x0, x0, dec_msg@PAGEOFF
     bl print_string
@@ -214,42 +232,6 @@ show_result:
     mov x1, #8
     bl int_to_str
     bl print_string_with_len
-
-    // Display result message
-    adrp x0, result_msg@PAGE
-    add x0, x0, result_msg@PAGEOFF
-    bl print_string
-
-    // Show result in chosen base first
-    adrp x0, chosen_base_msg@PAGE
-    add x0, x0, chosen_base_msg@PAGEOFF
-    bl print_string
-    mov x0, x25             // Result to convert
-    mov x2, x19             // Original base choice
-    bl get_base             // Convert choice to actual base
-    mov x1, x0              // Base for conversion
-    mov x0, x25             // Result to convert
-    bl int_to_str
-    bl print_string_with_len
-
-  // Show in decimal
-    adrp x0, dec_msg@PAGE
-    add x0, x0, dec_msg@PAGEOFF
-    bl print_string
-    mov x0, x25
-    mov x1, #10
-    bl int_to_str
-    bl print_string_with_len
-
-  //Show in binary
-    adrp x0, bin_msg@PAGE
-    add x0, x0, bin_msg@PAGEOFF
-    bl print_string
-    mov x0, x25
-    mov x1, #2
-    bl int_to_str
-    bl print_string_with_len
-
 
 exit_program:
     mov x0, #0              // Exit code 0
