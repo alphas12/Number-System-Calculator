@@ -232,6 +232,12 @@ show_result:
     mov x1, #8
     bl int_to_str
     bl print_string_with_len
+    
+    // Print newline and return to start
+    adrp x0, newline@PAGE
+    add x0, x0, newline@PAGEOFF
+    bl print_string
+    b _start
 
 exit_program:
     mov x0, #0              // Exit code 0
