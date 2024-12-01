@@ -261,6 +261,40 @@ get_base:
     mov x0, #16
     ret
     
+    // Function to validate input based on chosen base
+validate_input:
+    stp x29, x30, [sp, #-16]!
+    stp x20, x21, [sp, #-16]!
+    stp x22, x23, [sp, #-16]!   // Save more registers
+    mov x20, x0                  // Save string pointer
+    mov x21, x1                  // Save length
+    mov x22, x2                  // Save original base choice
+
+    // Skip empty strings
+    cmp x21, #0
+    b.eq .Linvalid
+
+    mov x3, #0                   // Counter
+
+.Lvalidate_loop:
+    cmp x3, x21
+    b.ge .Lvalid                // Reached end, input is valid
+    
+    ldrb w4, [x20, x3]          // Load character
+    
+    // Skip newline at end
+    cmp w4, #'\n'
+    b.eq .Lnext
+
+    // Check base and validate accordingly
+    cmp x22, #1                 // Decimal
+    b.eq .Lcheck_decimal
+    cmp x22, #2                 // Binary
+    b.eq .Lcheck_binary
+    cmp x22, #3                 // Hexadecimal
+    b.eq .Lcheck_hex
+    b .Lcheck_octal             // Octal (default)
+    
 exit_program:
     mov x0, #0              // Exit code 0
     mov x16, #1             // Exit syscall
