@@ -329,6 +329,26 @@ validate_input:
     cmp w4, #'F'
     b.gt .Linvalid
     b .Lnext
+
+    Lcheck_octal:
+    cmp w4, #'0'
+    b.lt .Linvalid
+    cmp w4, #'7'
+    b.gt .Linvalid
+
+.Lnext:
+    add x3, x3, #1              // Next character
+    b .Lvalidate_loop
+
+.Lvalid:
+    mov x0, #1                  // Return valid
+    b .Lvalidate_done
+
+.Linvalid:
+    mov x0, #0                  // Return invalid
+
+
+add this on line 333
     
 exit_program:
     mov x0, #0              // Exit code 0
