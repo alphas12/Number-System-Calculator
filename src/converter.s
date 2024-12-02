@@ -294,7 +294,22 @@ validate_input:
     cmp x22, #3                 // Hexadecimal
     b.eq .Lcheck_hex
     b .Lcheck_octal             // Octal (default)
-    
+
+.Lcheck_decimal:
+    cmp w4, #'0'
+    b.lt .Linvalid
+    cmp w4, #'9'
+    b.gt .Linvalid
+    b .Lnext
+
+.Lcheck_binary:
+    cmp w4, #'0'
+    b.lt .Linvalid
+    cmp w4, #'1'
+    b.gt .Linvalid
+    b .Lnext
+
+
 exit_program:
     mov x0, #0              // Exit code 0
     mov x16, #1             // Exit syscall
