@@ -309,7 +309,27 @@ validate_input:
     b.gt .Linvalid
     b .Lnext
 
-
+.Lcheck_hex:
+    // Check if digit first
+    cmp w4, #'0'
+    b.lt .Linvalid
+    cmp w4, #'9'
+    b.le .Lnext
+    
+    // Convert lowercase to uppercase
+    cmp w4, #'a'
+    b.lt .Lcheck_upper_hex
+    cmp w4, #'f'
+    b.gt .Linvalid
+    sub w4, w4, #32             // Convert to uppercase
+    
+.Lcheck_upper_hex:
+    cmp w4, #'A'
+    b.lt .Linvalid
+    cmp w4, #'F'
+    b.gt .Linvalid
+    b .Lnext
+    
 exit_program:
     mov x0, #0              // Exit code 0
     mov x16, #1             // Exit syscall
