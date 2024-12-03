@@ -348,7 +348,31 @@ validate_input:
     mov x0, #0                  // Return invalid
 
 
-add this on line 333
+.Lvalidate_done:
+    ldp x22, x23, [sp], #16     // Restore additional registers
+    ldp x20, x21, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Function to convert string to integer
+str_to_int:
+    // x0 = string pointer
+    // x1 = length
+    // x2 = base choice (1-4)
+    stp x29, x30, [sp, #-16]!   // Save registers
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+
+    mov x19, x0                  // Save string pointer
+    mov x20, x1                  // Save length
+    mov x21, x2                  // Save base choice
+
+    // Get actual base
+    bl get_base
+    mov x22, x0                  // x22 = actual base (2,8,10,16)
+
+    mov x0, #0                   // Initialize result
+    mov x3, #0                   // Initialize counter
     
 exit_program:
     mov x0, #0              // Exit code 0
