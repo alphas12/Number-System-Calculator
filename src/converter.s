@@ -408,6 +408,46 @@ str_to_int:
     sub w4, w4, #'A'
     add w4, w4, #10             // 'A' -> 10
     b .Ladd_digit
+
+    .Ldigit:
+    sub w4, w4, #'0'            // Convert '0'-'9' to 0-9
+
+.Ladd_digit:
+    // result = result * base + digit
+    mul x0, x0, x22             // result *= base
+    add x0, x0, x4              // result += digit
+
+.Lnext_char:
+    add x3, x3, #1              // Next character
+    b .Lconvert_loop
+
+.Lconvert_done:
+    ldp x21, x22, [sp], #16     // Restore registers
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Function to convert integer to string
+int_to_str:
+    // x0 = integer value
+    // x1 = base
+    // Returns: x0 = string pointer, x1 = length
+    stp x19, x20, [sp, #-16]!  // Save registers
+    stp x21, x22, [sp, #-16]!
+    
+    adrp x19, result@PAGE
+    add x19, x19, result@PAGEOFF
+    add x19, x19, #63        // Point to end of buffer
+    mov x20, #0              // Length counter
+    mov x21, x0              // Copy of input value
+    
+    // Handle zero case
+    cbnz x21, int_to_str_loop
+    mov w22, #48            // ASCII '0'
+    strb w22, [x19], #-1
+    mov x20, #1
+    b int_to_str_done
+
     
 exit_program:
     mov x0, #0              // Exit code 0
