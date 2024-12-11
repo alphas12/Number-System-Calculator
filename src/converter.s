@@ -374,6 +374,41 @@ str_to_int:
     mov x0, #0                   // Initialize result
     mov x3, #0                   // Initialize counter
     
+    .Lconvert_loop:
+    cmp x3, x20
+    b.ge .Lconvert_done         // Reached end of string
+
+    ldrb w4, [x19, x3]          // Load character
+    
+    // Skip newline
+    cmp w4, #'\n'
+    b.eq .Lnext_char
+
+    // Convert character to value
+    cmp w4, #'0'
+    b.lt .Lconvert_done
+    cmp w4, #'9'
+    b.le .Ldigit
+
+    // Handle a-f
+    cmp w4, #'a'
+    b.lt .Lcheck_upper
+    cmp w4, #'f'
+    b.gt .Lconvert_done
+    sub w4, w4, #'a'
+    add w4, w4, #10             // 'a' -> 10
+    b .Ladd_digit
+
+.Lcheck_upper:
+    // Handle A-F
+    cmp w4, #'A'
+    b.lt .Lconvert_done
+    cmp w4, #'F'
+    b.gt .Lconvert_done
+    sub w4, w4, #'A'
+    add w4, w4, #10             // 'A' -> 10
+    b .Ladd_digit
+    
 exit_program:
     mov x0, #0              // Exit code 0
     mov x16, #1             // Exit syscall
