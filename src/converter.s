@@ -457,7 +457,7 @@ int_to_str_loop:
     b.lt 1f
     add x21, x21, #55       // Convert 10-15 to 'A'-'F'
     b 2f
-    
+
 1:
     add x21, x21, #48       // Convert 0-9 to '0'-'9'
 2:
@@ -475,6 +475,32 @@ int_to_str_done:
     ldp x19, x20, [sp], #16
     ret
 
+
+
+// Function to read a single character
+read_input:
+    sub sp, sp, #16
+    mov x0, #0              // stdin
+    mov x1, sp              // buffer
+    mov x2, #2              // read 2 bytes (char + newline)
+    mov x16, #3             // read syscall
+    svc #0x80
+    ldrb w0, [sp]          // load character
+    add sp, sp, #16
+    ret
+
+// Function to read a string
+read_string:
+    adrp x1, buffer@PAGE
+    add x1, x1, buffer@PAGEOFF
+    mov x0, #0              // stdin
+    mov x2, #31             // max 31 chars
+    mov x16, #3             // read syscall
+    svc #0x80
+    mov x1, x0              // save length
+    adrp x0, buffer@PAGE
+    add x0, x0, buffer@PAGEOFF
+    ret
     
 exit_program:
     mov x0, #0              // Exit code 0
