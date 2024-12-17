@@ -409,7 +409,7 @@ str_to_int:
     add w4, w4, #10             // 'A' -> 10
     b .Ladd_digit
 
-    .Ldigit:
+.Ldigit:
     sub w4, w4, #'0'            // Convert '0'-'9' to 0-9
 
 .Ladd_digit:
@@ -447,6 +447,33 @@ int_to_str:
     strb w22, [x19], #-1
     mov x20, #1
     b int_to_str_done
+
+int_to_str_loop:
+    udiv x22, x21, x1       // Divide by base
+    msub x21, x22, x1, x21  // Get remainder
+    
+    // Convert to ASCII
+    cmp x21, #10
+    b.lt 1f
+    add x21, x21, #55       // Convert 10-15 to 'A'-'F'
+    b 2f
+    
+1:
+    add x21, x21, #48       // Convert 0-9 to '0'-'9'
+2:
+    strb w21, [x19], #-1    // Store digit
+    add x20, x20, #1        // Increment length
+    mov x21, x22            // Update value
+    cbnz x21, int_to_str_loop
+    
+int_to_str_done:
+    add x19, x19, #1        // Point back to start of string
+    mov x0, x19             // Return pointer to start
+    mov x1, x20             // Return length
+    
+    ldp x21, x22, [sp], #16  // Restore registers
+    ldp x19, x20, [sp], #16
+    ret
 
     
 exit_program:
