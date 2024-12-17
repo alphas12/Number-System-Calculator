@@ -32,17 +32,21 @@ xcode-select --install
 
 ## Building
 
-The project uses a Makefile for building. Here are the available commands:
+The project can be built manually without using a Makefile. Here are the steps:
 
+1. Assemble the source:
 ```bash
-# Build the calculator
-make
+as -o converter.o src/converter.s
+```
 
-# Build and run the calculator
-make run
+2. Link the object file:
+```bash
+ld -o converter converter.o -lSystem -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -e _start -arch arm64
+```
 
-# Clean build files
-make clean
+3. Run the program:
+```bash
+./converter
 ```
 
 ## Project Structure
@@ -51,27 +55,26 @@ make clean
 .
 ├── src/
 │   └── converter.s    # Main assembly source code
-├── Makefile          # Build configuration
 ├── LICENSE           # MIT License
 └── README.md         # This file
 ```
 
 ## Usage
 
-1. Build and run the calculator:
-```bash
-make run
-```
-
-2. Select a number system (1-5):
+1. Select a number system (1-5):
    - 1: Decimal
    - 2: Binary
    - 3: Hexadecimal
    - 4: Octal
    - 5: Exit
 
-3. Enter your numbers and select an operation
-4. View the result in all supported number systems
+2. Enter your numbers and select an operation (1-4):
+   - 1: Addition
+   - 2: Subtraction
+   - 3: Multiplication
+   - 4: Division
+
+3. View the result in all supported number systems
 
 ## Contributing
 
@@ -81,9 +84,6 @@ make run
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
