@@ -501,6 +501,32 @@ read_string:
     adrp x0, buffer@PAGE
     add x0, x0, buffer@PAGEOFF
     ret
+
+// Function to print a null-terminated string
+print_string:
+    mov x2, #0              // length counter
+1:
+    ldrb w1, [x0, x2]
+    cbz w1, 2f
+    add x2, x2, #1
+    b 1b
+2:
+    mov x1, x0              // buffer
+    mov x0, #1              // stdout
+    mov x16, #4             // write syscall
+    svc #0x80
+    ret
+
+// Function to print a string with known length
+print_string_with_len:
+    // x0 = string pointer
+    // x1 = length
+    mov x2, x1              // length
+    mov x1, x0              // buffer
+    mov x0, #1              // stdout
+    mov x16, #4             // write syscall
+    svc #0x80
+    ret
     
 exit_program:
     mov x0, #0              // Exit code 0
