@@ -10,7 +10,7 @@ input_msg1:
 input_msg2:
     .asciz "\nEnter second number: "
 operation_msg:
-    .asciz "\nSelect operation:\n1. Addition (+)\n2. Subtraction (-)\n3. Multiplication (*)\nChoice: "
+    .asciz "\nSelect operation:\n1. Addition (+)\n2. Subtraction (-)\n3. Multiplication (*)\n4. Division (/)\nChoice: "
 invalid_input:
     .asciz "\nInvalid input for chosen number system! Try again.\n"
 result_msg:
@@ -36,9 +36,11 @@ debug_base:
 debug_char:
     .asciz "\nDebug - Char: "
 invalid_selection_msg:
-    .asciz "\nInvalid selection! Please choose 1-5: "
+    .asciz "\nInvalid selection! Please choose 1-5:\n"
 invalid_operation_msg:
-    .asciz "\nInvalid operation! Please choose 1-3: "
+    .asciz "\nInvalid operation! Please choose 1-4:\n"
+division_by_zero_msg:
+    .asciz "\nError: Division by zero is not allowed!\n"
 
 // Text section
 .section __TEXT,__text
@@ -115,7 +117,7 @@ select_operation:
     // Validate operation choice
     cmp x23, #1
     b.lt invalid_operation
-    cmp x23, #4
+    cmp x23, #5
     b.gt invalid_operation
     b get_second_number
 
@@ -158,6 +160,8 @@ get_second_number:
     b.eq do_subtraction
     cmp x23, #3
     b.eq do_multiplication
+    cmp x23, #4
+    b.eq do_division
 
 invalid_second:
     adrp x0, invalid_input@PAGE
@@ -173,10 +177,21 @@ do_subtraction:
     sub x25, x22, x24
     b show_result
 
- do_multiplication:
+do_multiplication:
     mul x25, x22, x24
     b show_result
 
+do_division:
+    cmp x24, #0             // Check if the second number is zero
+    beq division_by_zero     // Branch to division_by_zero if it is
+    sdiv x25, x22, x24      // Perform division
+    b show_result
+
+division_by_zero:
+    adrp x0, division_by_zero_msg@PAGE
+    add x0, x0, division_by_zero_msg@PAGEOFF
+    bl print_string
+    b get_second_number      // Retry input for the second number
 
 show_result:
 
@@ -486,7 +501,14 @@ read_input:
     mov x16, #3             // read syscall
     svc #0x80
     ldrb w0, [sp]          // load character
+    cmp w0, #'\n'           // check if newline was entered
+    b.eq 1f
     add sp, sp, #16
+    ret
+
+1:
+    add sp, sp, #16
+    mov w0, #0              // set invalid value or default
     ret
 
 // Function to read a string
@@ -532,5 +554,3 @@ exit_program:
     mov x0, #0              // Exit code 0
     mov x16, #1             // Exit syscall
     svc #0x80              // Make the system call
-
-    
